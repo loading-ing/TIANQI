@@ -1,0 +1,10 @@
+{
+    "client_name": "deepseek",
+    "session":{
+        "deepseek":{
+            "base_url": "https://api.deepseek.com",
+            "api_key": "sk-5b04419da96f4a1aa7758debfef21fcc",
+            "model": "deepseek-chat"
+        }
+    }
+}
