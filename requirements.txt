@@ -2,3 +2,7 @@ pyqt5
 pyopengl
 openai
 huggingface-hub
+fastapi
+uvicorn[standard]
+torch
+transformers
