@@ -1,5 +1,6 @@
 from typing import Union
 from .inference_engine import InferenceEngine
+from pydantic import BaseModel
 
 from fastapi import FastAPI
 
@@ -15,6 +16,11 @@ def read_root():
 def read_item(item_id: int, q: Union[str, None] = None):
     return {"item_id": item_id, "q": q}
 
-@app.get("/chat")
-def chat(content: str, role: str = "user"):
-    return inference_engine.chat(content, role)
+
+class CasualExample(BaseModel):
+    content:str
+    role:str
+
+@app.post("/casual/chat")
+def chat(data:CasualExample):
+    return inference_engine.chat(data.content, data.role)
