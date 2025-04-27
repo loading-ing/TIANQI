@@ -6,3 +6,5 @@ fastapi
 uvicorn[standard]
 torch
 transformers
+sentence-transformers
+langchain

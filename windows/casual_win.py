@@ -4,6 +4,10 @@ from PyQt5.QtWidgets import (QApplication, QMainWindow, QWidget, QVBoxLayout, QH
 from PyQt5.QtCore import Qt, QSize
 from PyQt5.QtGui import QFont, QTextCursor
 
+from example.manager import Manager
+
+manager=Manager()
+
 
 class ChatWindow(QMainWindow):
     def __init__(self):
@@ -187,19 +191,15 @@ class ChatWindow(QMainWindow):
         # 延迟1秒模拟AI思考时间
         from PyQt5.QtCore import QTimer
         QTimer.singleShot(1000, lambda: self._send_ai_response(user_message))
+
+    def casual_ai_response(self, user_message):
+        # 延迟1秒模拟AI思考时间
+        from PyQt5.QtCore import QTimer
+        QTimer.singleShot(1000, lambda: self._send_ai_response(user_message))
     
     def _send_ai_response(self, user_message):
-        """实际发送AI回复"""
-        # 简单的回复逻辑
-        if "你好" in user_message or "hi" in user_message.lower():
-            response = "您好！我是AI助手，有什么可以帮您的吗？"
-        elif "谢谢" in user_message:
-            response = "不客气！如果还有其他问题，随时问我。"
-        elif "名字" in user_message:
-            response = "我是一个AI语言模型，你可以叫我助手或者AI。"
-        else:
-            response = f"我已经收到您的消息: '{user_message}'。这是一个模拟回复，实际应用中这里会连接AI模型生成回答。"
-        
+        response=manager.chat(user_message)
+
         self.add_message("ai", response)
 
 
