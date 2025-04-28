@@ -1,8 +1,8 @@
-from windows.casual_win import ChatWindow
+from windows.main import MainWindow
 import sys
 from PyQt5.QtWidgets import QApplication
 
 app = QApplication(sys.argv)
-window = ChatWindow()
+window = MainWindow()
 window.show()
 sys.exit(app.exec_())

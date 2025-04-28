@@ -9,7 +9,7 @@ from example.manager import Manager
 manager=Manager()
 
 
-class ChatWindow(QMainWindow):
+class MainWindow(QMainWindow):
     def __init__(self):
         super().__init__()
         self.setWindowTitle("AI 对话助手")

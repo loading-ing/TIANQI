@@ -10,4 +10,12 @@ sentence-transformers
 langchain
 langchain-community
 langchain-huggingface
-faiss
+faiss-cpu
+unstructured
+pdfminer.six
+pi-heif
+unstructured_inference
+pdf2image
+pytesseract
+python-docx
+docx

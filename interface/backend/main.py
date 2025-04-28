@@ -21,14 +21,14 @@ class CasualExample(BaseModel):
     content:str
     role:str
 
-@app.post("/casual/chat")
+@app.post("/casual/chat/")
 def chat(data:CasualExample):
     return inference_engine.chat(data.content, data.role)
 
 class TextsRequest(BaseModel):
     texts: list[str]
 
-@app.post("/rag/add_texts")
+@app.post("/rag/add_texts/")
 def rag_add_texts(data: TextsRequest):
     inference_engine.rag_add_texts(data.texts)
     return {"status": "success"}
@@ -37,13 +37,16 @@ def rag_add_texts(data: TextsRequest):
 class IndexRequest(BaseModel):
     index: int
 
-@app.post("/rag/delete_by_index")
+@app.post("/rag/delete_by_index/")
 def rag_delete_by_index(data: IndexRequest):
     inference_engine.rag_delete_by_index(data.index)
     return {"status": "success"}
-@app.post("/rag/change_embedding_model")
-def rag_change_embedding_model(new_model_name: str):
-    inference_engine.rag_change_embedding_model(new_model_name)
+
+class ChangeEmbeddingModelRequest(BaseModel):
+    new_model_name: str
+@app.post("/rag/change_embedding_model/")
+def rag_change_embedding_model(data:ChangeEmbeddingModelRequest):
+    inference_engine.rag_change_embedding_model(data.new_model_name)
     return {"status": "success"}
 
 
@@ -51,7 +54,7 @@ class UpdateTextRequest(BaseModel):
     index: int
     new_text: str
 
-@app.post("/rag/update_text")
+@app.post("/rag/update_text/")
 def rag_update_text(data: UpdateTextRequest):
     inference_engine.rag_update_text(data.index, data.new_text)
     return {"status": "success"}
@@ -60,6 +63,6 @@ class ChatRequest(BaseModel):
     query: str
     k: int = 5
 
-@app.post("/rag/chat")
+@app.post("/rag/chat/")
 def rag_chat(data: ChatRequest):
     return inference_engine.rag_chat(data.query, data.k)

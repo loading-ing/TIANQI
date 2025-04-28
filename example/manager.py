@@ -5,24 +5,28 @@ class Manager:
     def __init__(self):
         self.config=load_config()
         self.example_name=self.config["example_name"]
-        self.example=self.__create_example()
+        self.__create_example()
 
     
     def __create_example(self):
-        if self.example_name=="casual":
-            from .casual.casual import CasualExample
-            example=CasualExample()
-            print("CasualExample created")
-            return example
-        else:
-            raise ValueError("Invalid example name")
+        for name in self.example_name:
+            if name=="casual":
+                from .casual.casual import CasualExample
+                self.casual_example=CasualExample()
+                print("CasualExample created")
+            elif name=="rag":
+                from .rag.rag import RagExample
+                self.rag_example=RagExample()
+                print("RagExample created")
+            else:
+               raise ValueError("Invalid example name")
         
-    def chat(self, content:str, role="user"):
-        if self.example_name=="casual":
-            return self.example.chat(content, role)
-        else:
-            raise ValueError("Invalid example name")
+    def casual_chat(self, content:str, role="user"):
+        return self.casual_example.chat(content, role)
+
+
+#  界面调用        
+manager=Manager()
         
 if __name__=="__main__":
-    manager=Manager()
     manager.chat("Hello")
