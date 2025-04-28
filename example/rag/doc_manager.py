@@ -1,5 +1,5 @@
 
-from langchain.document_loaders import DirectoryLoader, TextLoader, UnstructuredWordDocumentLoader
+from langchain.document_loaders import DirectoryLoader, TextLoader, UnstructuredWordDocumentLoader, UnstructuredPDFLoader
 from langchain.text_splitter import RecursiveCharacterTextSplitter
 
 class DocumentLoader:
@@ -12,7 +12,8 @@ class DocumentLoader:
         """
         loaders = [
             DirectoryLoader(self.folder_path, glob="**/*.txt", loader_cls=TextLoader),
-            DirectoryLoader(self.folder_path, glob="**/*.docx", loader_cls=UnstructuredWordDocumentLoader)
+            DirectoryLoader(self.folder_path, glob="**/*.docx", loader_cls=UnstructuredWordDocumentLoader),
+            DirectoryLoader(self.folder_path, glob="**/*.pdf", loader_cls=UnstructuredPDFLoader)
         ]
         docs = []
         for loader in loaders:

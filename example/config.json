@@ -1,4 +1,5 @@
 {
     "base_url":"http://127.0.0.1:8000/",
-    "example_name":"casual"
+    "example_name":"casual",
+    "rag_documents_path":"/2023212445/projects/TIANQI/resources/rag/documents"
 }

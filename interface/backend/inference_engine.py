@@ -1,4 +1,5 @@
 import json
+from typing import List
 
 class InferenceEngine:
     def __init__(self):
@@ -26,4 +27,35 @@ class InferenceEngine:
 
     def chat(self, content:str, role="user"):
         return self.client_controller.chat(content, role)
+
+    def rag_add_texts(self, texts: List[str]) -> None:
+        return self.client_controller.rag_add_texts(texts)
+
+    def rag_change_embedding_model(self, new_model_name: str) -> None:
+        return self.client_controller.rag_change_embedding_model(new_model_name)
+
+    def rag_delete_by_index(self, index: int) -> None:
+            return self.client_controller.rag_delete_by_index(index)
+    
+    def rag_similarity_search(self, query: str, k: int = 5) -> List[str]:
+        return self.client_controller.rag_similarity_search(query, k)
+
+    def rag_chat(self,query:str,k:int=5)->str:
+        """
+        进行 RAG 检索增强推理
+        :param query: 用户输入的问题
+        :param k: 检索 top-k 条上下文
+        :return: 大模型推理的回答
+        """
+        # 1. 检索向量库
+        related_docs = self.client_controller.rag_similarity_search(query, k=k)
+
+        # 2. 构建 prompt 模板
+        context = "\n\n".join(related_docs)
+        prompt = f"""你是一个专业的智能助手。根据以下参考资料，回答用户提出的问题。如果参考资料中没有答案，\
+        请礼貌地告诉用户你不知道。\n参考资料： \n{context} \n用户提问：{query} \n你的回答：\n"""
+
+        # 3. 调用大模型推理
+        response = self.client_controller.chat(prompt, role="user")
         
+        return response

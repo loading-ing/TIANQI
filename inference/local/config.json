@@ -5,10 +5,16 @@
             "device":"cuda",
             "model_type":"Casual",
             "model_path":"/2023212445/models/deepseek-ai/DeepSeek-R1-Distill-Qwen-7B",
-            "max_length":512,
+            "max_length":4096,
             "temperature":1.0,
             "top_k":50,
             "top_p":0.95
         }
+    },
+    "rag":"True",
+    "rag_settings":{
+        "embedding_model_path":"/2023212445/models/BAAI/bge-large-zh-v1.5",
+        "device":"cuda",
+        "vector_store_path":"/2023212445/projects/TIANQI/resources/rag/db/rag_faiss_store"
     }
 }

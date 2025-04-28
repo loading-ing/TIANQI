@@ -8,3 +8,6 @@ torch
 transformers
 sentence-transformers
 langchain
+langchain-community
+langchain-huggingface
+faiss
