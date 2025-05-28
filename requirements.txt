@@ -19,3 +19,4 @@ pdf2image
 pytesseract
 python-docx
 docx
+live2d-py
