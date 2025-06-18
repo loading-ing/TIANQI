@@ -66,3 +66,8 @@ class ChatRequest(BaseModel):
 @app.post("/rag/chat/")
 def rag_chat(data: ChatRequest):
     return inference_engine.rag_chat(data.query, data.k)
+
+
+@app.post("/config/")
+def get_config():
+    return inference_engine.get_controller_config()

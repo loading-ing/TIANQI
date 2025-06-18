@@ -232,6 +232,7 @@ class AIChatPage(QWidget):
         
         try:
             self.model_config=manager.get_model_config()
+            
         except:
             self.model_config=None
             self.status_label.setText("server not connected")
