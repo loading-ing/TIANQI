@@ -6,10 +6,10 @@ from PyQt5.QtGui import QIcon
 from PyQt5.QtCore import Qt
 
 # 导入每个独立的页面
-from .pages.ai_chat_page import AIChatPage
+from .pages.ai_chat_page_copy import AIChatPage
 from .pages.voice_chat_page import VoiceChatPage
 from .pages.image_text_page import ImageTextPage
-from .pages.rag_page import RagPage
+from .pages.rag_page_copy import RagPage
 from .pages.desktop_control_page import DesktopControlPage
 from .pages.settings_page import SettingsPage
 
@@ -32,11 +32,11 @@ class MainWindow(QMainWindow):
         # 页面实例
         self.pages = {
             "AI对话": AIChatPage(),
-            "语音对话": VoiceChatPage(),
-            "图文转换": ImageTextPage(),
+            # "语音对话": VoiceChatPage(),
+            # "图文转换": ImageTextPage(),
             "RAG检索": RagPage(),
-            "桌面控制": DesktopControlPage(),
-            "设置": SettingsPage(),
+            # "桌面控制": DesktopControlPage(),
+            # "设置": SettingsPage(),
         }
 
         for page in self.pages.values():

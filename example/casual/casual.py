@@ -1,5 +1,7 @@
 import requests
+import aiohttp
 import json
+import asyncio
 
 class CasualExample:
     def __init__(self):
@@ -14,11 +16,15 @@ class CasualExample:
         return config
 
     def chat(self, content:str, role="user"):
+
         url = self.base_url + "chat/"
         data = {
             "content": content,
             "role": role
         }
+        # async with aiohttp.ClientSession() as session:
+        #     async with session.post(url, json=data) as response:
+        #         return await response.json()
         response = requests.post(url, json=data)
         return response.json()
 

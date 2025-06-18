@@ -59,3 +59,6 @@ class InferenceEngine:
         response = self.client_controller.chat(prompt, role="user")
         
         return response
+
+    def get_controller_config(self):
+        return self.client_controller.get_config()

@@ -1,5 +1,6 @@
 import json
 from .utils.tool import load_config
+import requests
 
 class Manager:
     def __init__(self):
@@ -24,6 +25,10 @@ class Manager:
     def casual_chat(self, content:str, role="user"):
         return self.casual_example.chat(content, role)
 
+    def get_model_config(self):
+        url=self.config["base_url"]+"config/"
+        response=requests.get(url)
+        return response.json()
 
 #  界面调用        
 manager=Manager()

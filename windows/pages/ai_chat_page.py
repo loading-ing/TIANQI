@@ -3,6 +3,7 @@ from PyQt5.QtWidgets import (
 )
 from PyQt5.QtCore import Qt
 from PyQt5.QtGui import QFont
+import asyncio
 
 from example.manager import manager
 
@@ -86,7 +87,7 @@ class AIChatPage(QWidget):
         self.add_message("你", user_text, align_right=True)
 
         # 模拟AI回复
-        ai_response = self.get_ai_response(user_text)
+        ai_response = asyncio.run(self.get_ai_response(user_text))
         self.add_message("AI", ai_response, align_right=False)
 
         # 清空输入框
@@ -95,6 +96,6 @@ class AIChatPage(QWidget):
 
     def get_ai_response(self, prompt):
         # TODO: 这里可以替换为真正的API推理
-        # response = manager.casual_chat(prompt)
-        return f"{prompt}"
+        response = manager.casual_chat(prompt)
+        return response
 

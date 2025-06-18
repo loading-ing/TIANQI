@@ -7,6 +7,7 @@ from PyQt5.QtGui import QFont
 from example.manager import manager
 import shutil
 import os
+import asyncio
 
 class RagPage(QWidget):
     def __init__(self):

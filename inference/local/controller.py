@@ -99,6 +99,9 @@ class ClientController:
             self.rag_client.save_vectorstore(self.vector_store_path)
         else:
             raise ValueError("Rag is not activated")
+
+    def get_config(self):
+        return self.config
     
 if __name__ == "__main__":
     clientController=ClientController()
