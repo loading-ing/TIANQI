@@ -3,6 +3,9 @@ from .inference_engine import InferenceEngine
 from pydantic import BaseModel
 
 from fastapi import FastAPI
+from fastapi.responses import StreamingResponse
+from fastapi.middleware.cors import CORSMiddleware
+import asyncio
 
 app = FastAPI()
 
@@ -23,7 +26,7 @@ class CasualExample(BaseModel):
 
 @app.post("/casual/chat/")
 def chat(data:CasualExample):
-    return inference_engine.chat(data.content, data.role)
+    return StreamingResponse(inference_engine.chat(data.content, data.role),media_type="text/event-stream")
 
 class TextsRequest(BaseModel):
     texts: list[str]
@@ -40,6 +43,11 @@ class IndexRequest(BaseModel):
 @app.post("/rag/delete_by_index/")
 def rag_delete_by_index(data: IndexRequest):
     inference_engine.rag_delete_by_index(data.index)
+    return {"status": "success"}
+
+@app.post("/rag/delete_all/")
+def rag_delete_all():
+    inference_engine.rag_delete_all()
     return {"status": "success"}
 
 class ChangeEmbeddingModelRequest(BaseModel):
@@ -65,9 +73,20 @@ class ChatRequest(BaseModel):
 
 @app.post("/rag/chat/")
 def rag_chat(data: ChatRequest):
-    return inference_engine.rag_chat(data.query, data.k)
+    return StreamingResponse(inference_engine.rag_chat(data.query, data.k),media_type="text/event-stream")
 
 
 @app.post("/config/")
 def get_config():
     return inference_engine.get_controller_config()
+
+@app.get("/stream")
+async def stream_output(prompt: str):
+    async def event_generator():
+        reversed_text = prompt[::-1]
+        for ch in reversed_text:
+            await asyncio.sleep(0.1)  # 模拟生成速度
+            yield f"data: {ch}\n\n"
+        yield "data: [DONE]\n\n"
+
+    return StreamingResponse(event_generator(), media_type="text/event-stream")

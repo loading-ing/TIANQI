@@ -1,5 +1,7 @@
 from transformers import AutoModelForCausalLM, AutoTokenizer
 from typing import List, Dict, Any
+from transformers import TextIteratorStreamer
+import threading
 
 class TransformerClient:
     def __init__(self, model_path: str, device: str = "cpu"):
@@ -21,7 +23,7 @@ class TransformerClient:
         """
         return self.tokenizer(prompt, return_tensors="pt", max_length=max_length, truncation=True).to(self.device)
 
-    def infer(self, prompt: str, max_length: int = 512, temperature: float = 1.0, top_k: int = 50, top_p: float = 0.95) -> str:
+    def infer(self, prompt: str, max_length: int = 512, temperature: float = 0.7, top_k: int = 50, top_p: float = 0.95) -> str:
         """
         进行文本推理。
         :param prompt: 输入的文本提示。
@@ -41,6 +43,46 @@ class TransformerClient:
             pad_token_id=self.tokenizer.eos_token_id
         )
         return self.tokenizer.decode(output_ids[0], skip_special_tokens=True)
+
+    def infer_stream(self, prompt: str, max_length: int = 512, temperature: float = 1.0, top_k: int = 50, top_p: float = 0.95):
+        """
+        进行文本推理（流式生成）。
+        返回一个 Python 生成器，逐 token 输出字符串。
+        """
+        inputs = self.process_prompt(prompt, max_length)
+        input_ids = inputs["input_ids"]
+        input_token_count = input_ids.shape[1]  # 原始 prompt token 数量
+        streamer = TextIteratorStreamer(self.tokenizer, skip_special_tokens=True)
+
+        # 在后台线程中生成，以避免阻塞主线程
+        generation_kwargs = dict(
+            input_ids=inputs["input_ids"],
+            max_length=max_length,
+            temperature=temperature,
+            top_k=top_k,
+            top_p=top_p,
+            pad_token_id=self.tokenizer.eos_token_id,
+            streamer=streamer
+        )
+        
+        thread = threading.Thread(target=self.model.generate, kwargs=generation_kwargs)
+        thread.start()
+
+        # 记录已解码字符长度，用于判断 prefill
+        generated_text = ""
+        start_yield = False
+        for token_text in streamer:
+            if not start_yield:
+                generated_text += token_text
+
+                # 跳过 prompt echo
+                if self.tokenizer(prompt, return_tensors="pt", add_special_tokens=False)["input_ids"].shape[1] > 0:
+                    if len(self.tokenizer(generated_text, add_special_tokens=False)["input_ids"]) <= input_token_count:
+                        continue  # 还在 prefill 阶段，跳过
+                    else:
+                        start_yield = True
+
+            yield token_text
 
     def set_device(self, device: str):
         """

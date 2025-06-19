@@ -58,12 +58,11 @@ class ClientController:
         self.transformer_client = self.__create_client()
 
     def chat(self, content:str,role="user"):
-        response = self.transformer_client.infer(prompt=content,
+        return self.transformer_client.infer_stream(prompt=content,
                                      max_length=self.max_length,
                                      temperature=self.temperature,
                                      top_k=self.top_k,
                                      top_p=self.top_p)
-        return response
 
     def rag_add_texts(self, texts: List[str]) -> None:
         if self.rag_client is not None:
@@ -82,6 +81,13 @@ class ClientController:
     def rag_delete_by_index(self, index: int) -> None:
         if self.rag_client is not None:
             self.rag_client.delete_by_index(index)
+            self.rag_client.save_vectorstore(self.vector_store_path)
+        else:
+            raise ValueError("Rag is not activated")
+
+    def rag_delete_all(self) -> None:
+        if self.rag_client is not None:
+            self.rag_client.delete_all()
             self.rag_client.save_vectorstore(self.vector_store_path)
         else:
             raise ValueError("Rag is not activated")

@@ -27,7 +27,7 @@ class Manager:
 
     def get_model_config(self):
         url=self.config["base_url"]+"config/"
-        response=requests.get(url)
+        response=requests.post(url)
         return response.json()
 
 #  界面调用        
