@@ -99,6 +99,13 @@ class RagClient:
         id_selector = faiss.IDSelectorBatch([index])
         self.vectorstore.index.remove_ids(id_selector)
 
+    def delete_all(self):
+        """
+        删除向量库中的所有数据（清空内存中的 FAISS 向量库）。
+        """
+        logging.info("🧹 正在清空向量库所有数据")
+        self.vectorstore = FAISS.from_texts(["创建一个新的向量库"], self.embedder)
+
     def update_text(self, index: int, new_text: str):
         """
         更新指定索引的数据。

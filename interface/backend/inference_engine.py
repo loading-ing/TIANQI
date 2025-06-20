@@ -35,7 +35,10 @@ class InferenceEngine:
         return self.client_controller.rag_change_embedding_model(new_model_name)
 
     def rag_delete_by_index(self, index: int) -> None:
-            return self.client_controller.rag_delete_by_index(index)
+        return self.client_controller.rag_delete_by_index(index)
+    
+    def rag_delete_all(self) -> None:
+        return self.client_controller.rag_delete_all()
     
     def rag_similarity_search(self, query: str, k: int = 5) -> List[str]:
         return self.client_controller.rag_similarity_search(query, k)
@@ -55,10 +58,19 @@ class InferenceEngine:
         prompt = f"""你是一个专业的智能助手。根据以下参考资料，回答用户提出的问题。如果参考资料中没有答案，\
         请礼貌地告诉用户你不知道。\n参考资料： \n{context} \n用户提问：{query} \n你的回答：\n"""
 
+        def event_stream():
+            # 发送 context 数据（前端可以监听 type: context）
+            yield f"event: context data: {context}\n"
+
+            # 4. 调用大模型生成（逐 token 返回）
+            for token in self.client_controller.chat(prompt, role="user"):
+                yield f"event: token data: {token}\n"
+
+            # 5. 完成标志
+            yield "event: done"
         # 3. 调用大模型推理
-        response = self.client_controller.chat(prompt, role="user")
+        return event_stream()
         
-        return response
 
     def get_controller_config(self):
         return self.client_controller.get_config()
