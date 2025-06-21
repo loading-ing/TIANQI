@@ -6,10 +6,10 @@ from PyQt5.QtGui import QIcon
 from PyQt5.QtCore import Qt
 
 # 导入每个独立的页面
-from .pages.ai_chat_page_copy import AIChatPage
+from .pages.ai_chat_page import AIChatPage
 from .pages.voice_chat_page import VoiceChatPage
 from .pages.image_text_page import ImageTextPage
-from .pages.rag_page_copy import RagPage
+from .pages.rag_page import RagPage
 from .pages.desktop_control_page import DesktopControlPage
 from .pages.settings_page import SettingsPage
 

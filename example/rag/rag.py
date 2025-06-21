@@ -3,6 +3,8 @@ import json
 from .doc_manager import DocumentLoader, TextSplitter
 from ..utils.tool import load_config
 from typing import List
+import aiohttp
+import asyncio
 
 
 class RagExample:
@@ -21,6 +23,25 @@ class RagExample:
         }
         response = requests.post(url, json=data)
         return response.json()
+
+    async def chat_stream(self, query: str, k: int = 5):
+        """异步流式输出"""
+        url = self.base_url + "chat/"
+        data = {
+            "query": query,
+            "k": k
+        }
+        try:
+            async with aiohttp.ClientSession() as session:
+                async with session.post(url,json=data) as resp:
+                    if resp.status != 200:
+                        yield f"HTTP error {resp.status}"
+                        return
+                    async for line in resp.content:
+                        yield line.decode("utf-8",errors="ignore").strip()
+                        # yield line
+        except Exception as e:
+            yield f"event: token Error: {str(e)}"
 
     def upload_document(self, filepath: str=None):
         """
@@ -58,11 +79,11 @@ class RagExample:
         response = requests.post(url, json=data)
         return response.json()
 
-    def clear_vectorstore(self):
+    def delete_vectorstore_all(self):
         """
-        清空服务器端向量库
+        删除向量库的所有记录
         """
-        url = self.base_url + "clear/"
+        url = self.base_url + "delete_all/"
         response = requests.post(url)
         return response.json()
 

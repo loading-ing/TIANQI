@@ -28,6 +28,26 @@ class CasualExample:
         response = requests.post(url, json=data)
         return response.json()
 
+    async def chat_stream(self, content: str, role="user"):
+        """异步流式输出"""
+        url = self.base_url + "chat/"
+        data = {
+            "content": content,
+            "role": role
+        }
+        try:
+            async with aiohttp.ClientSession() as session:
+                async with session.post(url,json=data) as resp:
+                    if resp.status != 200:
+                        yield f"HTTP error {resp.status}"
+                        return
+                    async for line in resp.content:
+                        yield line.decode("utf-8",errors="ignore").strip()
+                        # yield line
+        except Exception as e:
+            # self.error.emit(str(e))
+            yield str(e)
+
 
 if __name__ == "__main__":
     casualExample = CasualExample()
