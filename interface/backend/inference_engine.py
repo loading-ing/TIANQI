@@ -26,7 +26,8 @@ class InferenceEngine:
         self.client_controller = self.__create_client_controller()
 
     def chat(self, content:str, role="user"):
-        return self.client_controller.chat(content, role)
+        prompt = f"你是一个智能对话助手，能够与用户进行对话。用户和你说：{content}，你的回答："
+        return self.client_controller.chat(prompt, role)
 
     def rag_add_texts(self, texts: List[str]) -> None:
         return self.client_controller.rag_add_texts(texts)

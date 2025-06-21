@@ -58,8 +58,7 @@ class ClientController:
         self.transformer_client = self.__create_client()
 
     def chat(self, content:str,role="user"):
-        prompt = f"你是一个智能对话助手，能够与用户进行对话。用户和你说：{content}，你的回答："
-        return self.transformer_client.infer_stream(prompt=prompt,
+        return self.transformer_client.infer_stream(prompt=content,
                                      max_length=self.max_length,
                                      temperature=self.temperature,
                                      top_k=self.top_k,
