@@ -52,6 +52,7 @@ huggingface-cli download --resume-download BAAI/bge-large-zh-v1.5 --local-dir /B
         "vector_store_path":"/2023212445/projects/TIANQI/resources/rag/db/rag_faiss_store"
     }
 }
+```
 
 4. 启动服务
 ```shell
